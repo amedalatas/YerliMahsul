@@ -53,8 +53,8 @@ namespace Mahsul.Controllers
             // SMTP ayarlarınızı burada tanımlayın
             string smtpServer = "smtp.gmail.com";
             int smtpPort = 587; // Genellikle 587 veya 465 olur
-            string smtpUsername = "amed.alatas1313@gmail.com";
-            string smtpPassword = "xxgd vglj xxdx amkq ";
+            string smtpUsername = "kendi mailiniz";
+            string smtpPassword = "smtp şifreniz ";
         
 
             using (MailMessage mail = new MailMessage())
