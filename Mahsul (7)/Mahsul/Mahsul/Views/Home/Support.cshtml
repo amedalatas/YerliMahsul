@@ -1,0 +1,100 @@
+﻿@model Mahsul.Models.SupportViewModel
+
+<div class="contact-container">
+    <h1>İletişime Geçin</h1>
+    <p>Sorularınız veya geri bildirimleriniz için bizimle iletişime geçebilirsiniz.</p>
+
+    <form method="post" asp-action="Submit">
+        <div class="mb-3">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Adınız" required>
+        </div>
+        <div class="mb-3">
+            <input type="email" class="form-control" id="email" name="email" placeholder="E-Mail" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="Subject" name="Subject" placeholder="Konu" required>
+        </div>
+        <div class="mb-3">
+            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Mesajınız..." required></textarea>
+        </div>
+        <div class="mb-3">
+            <!-- Sadece 10 veya 11 haneli numerik giriş için "pattern" özelliğini güncelleyin -->
+            <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" placeholder="Telefon Numaranız" pattern="[0-9]{11}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Gönder</button>
+    </form>
+
+    <div class="contact-info">
+        <h2>Bize Ulaşın</h2>
+        <p><strong>Telefon:</strong> <a href="https://wa.me/905398432744" target="_blank">0539 843 27 44 <i class="fab fa-whatsapp"></i></a></p>
+        <p>
+            <strong>Email:</strong> amed.alatas1313@gmail.com <a href="mailto:amed.alatas1313@gmail.com">
+                <i class="far fa-envelope"></i> 
+            </a>
+        </p>
+        <p><strong>Adres:</strong> Tuğ Mahallesi, Tatvan, İstanbul, Türkiye <a href="https://www.google.com/maps/search/?api=1&query=Tuğ+Mahallesi,+Tatvan,+İstanbul,+Türkiye" <i class="fas fa-map-marker-alt"></i></a></p>
+    </div>
+
+
+
+</div>
+
+<style>
+    .contact-container {
+        background-color: #0a2240;
+        color: #fff;
+        padding: 40px;
+        max-width: 800px;
+        margin: 50px auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .contact-container h1, .contact-container h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .contact-container p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .contact-container .form-control {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .contact-container .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+        }
+
+            .contact-container .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #004085;
+            }
+
+    .contact-info {
+        margin-top: 40px;
+    }
+
+        .contact-info a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+            .contact-info a:hover {
+                text-decoration: underline;
+            }
+</style>

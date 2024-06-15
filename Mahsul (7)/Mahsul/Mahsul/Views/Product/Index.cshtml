@@ -1,0 +1,112 @@
+﻿@model List<Mahsul.Models.Product>
+
+<h1>Ürün Listesi</h1>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+<table id="tbl1"class="table">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Kategori</th>
+            <th>Ürün Resmi</th>
+            <th>Fiyat</th>
+            <th>Açıklama</th>
+            <th>Stok</th>
+            <th>Çiftçi</th>
+            <th>Konum</th>
+            <th>Düzenle</th>
+            <th>Sil</th>
+            <th>Yayın Durumu</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.ProductName</td>
+                <td>@product.SelectedCategoryName</td>
+                <td>
+                    @if (product.ProductImage != null && product.ProductImage.Any())
+                    {
+                        <div id="carouselExampleControls_@product.ProductID" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var image in product.ProductImage)
+                                {
+                                    <div class="carousel-item @(image == product.ProductImage.First() ? "active" : "")">
+                                        <img style="border-radius:20px;" class="d-block w-100" src="~/images/@image.ImagePath" alt="Product Image">
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@product.ProductID" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@product.ProductID" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    }
+                </td>
+                <td>@product.Price &#8378   </td>
+                <td>@product.Description</td>
+                <td>@product.Stok</td>
+                <td>@product.FarmerID</td>
+                <td>@product.Address</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Product", new { id = product.ProductID })" class="btn btn-primary">Düzenle</a>
+                </td>
+                <td>
+                    <form id="deleteForm_@product.ProductID" asp-action="Delete" asp-route-id="@product.ProductID" method="post">
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete('@product.ProductID')">Sil</button>
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="Product" asp-action="ActiveStatus" method="post">
+                        <input type="hidden" name="productId" value="@product.ProductID" />
+                        <button type="submit" class="btn btn-primary">Yayın Durumu Değiştir</button>
+                    </form>
+                </td>
+            </tr>
+        }
+
+</table>
+
+<a href="@Url.Action("AddProduct", "Product")" class="btn btn-primary">Ürün Ekle</a>
+
+<script>
+    
+
+    function confirmDelete(productId) {
+        if (confirm("Bu ürünü silmek istediğinizden emin misiniz?")) {
+            document.getElementById("deleteForm_" + productId).submit();
+        }
+    }
+</script>
+
+<style>
+    .small {
+        width: 40px;
+        height: 40px;
+    }
+
+    .carousel-inner img {
+        max-height: 80px;
+        object-fit: cover;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        filter: invert(100%);
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#tbl1').DataTable();
+    });
+</script>

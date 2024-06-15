@@ -1,0 +1,257 @@
+﻿@model Mahsul.Models.StatisticsViewModel
+
+@{
+    ViewData["Title"] = "İstatistikler";
+    var totalUsers = ViewData["TotalUsers"] ?? 0;
+    var totalConfirmedUsers = ViewData["TotalConfirmedUsers"] ?? 0;
+    var yearlySales = ViewData["YearlySales"] as List<dynamic>; // Veya doğru model türü kullanın
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
+                        <li class="breadcrumb-item active">Dashboard 2 - İstatistikler</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Dashboard 2 - İstatistikler</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="header-title">Yıllık Satışlar</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Ay</th>
+                                    <th scope="col">Toplam Satış</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.YearlySales != null && Model.YearlySales.Any())
+                                {
+                                    foreach (var item in Model.YearlySales)
+                                    {
+                                        <tr>
+                                            <td>@item.MonthName</td>
+                                            <td>@item.TotalSales</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2">Veri bulunamadı.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="header-title">Kullanıcı Rol Dağılımı</h4>
+                    <div id="user-role-distribution" class="apex-charts"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="avatar-sm bg-success rounded-circle mb-3 mx-auto">
+                        <i class="fas fa-shopping-cart avatar-title font-22 text-white"></i>
+                    </div>
+                    <h3 class="text-dark mb-1"><span data-plugin="counterup">@ViewData["totalCategories"]</span></h3>
+                    <p class="text-muted mb-1">Kategori Sayısı</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="avatar-sm bg-info rounded-circle mb-3 mx-auto">
+                        <i class="fas fa-users avatar-title font-22 text-white"></i>
+                    </div>
+                    <h3 class="text-dark mb-1"><span data-plugin="counterup">@totalUsers</span></h3>
+                    <p class="text-muted mb-1">Toplam Kullanıcı</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="avatar-sm bg-success rounded-circle mb-3 mx-auto">
+                        <i class="fas fa-shopping-cart avatar-title font-22 text-white"></i>
+                    </div>
+                    <h3 class="text-dark mb-1"><span data-plugin="counterup">@ViewData["TotalPurchases"]</span></h3>
+                    <p class="text-muted mb-1">Toplam Satışlar</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="avatar-sm bg-primary rounded-circle mb-3 mx-auto">
+                        <i class="fas fa-user-check avatar-title font-22 text-white"></i>
+                    </div>
+                    <h3 class="text-dark mb-1"><span data-plugin="counterup">@totalConfirmedUsers</span></h3>
+                    <p class="text-muted mb-1">Onaylı Hesap Sayısı</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="avatar-sm bg-warning rounded-circle mb-3 mx-auto">
+                        <i class="fas fa-tractor avatar-title font-22 text-white"></i>
+                    </div>
+                    <h3 class="text-dark mb-1"><span data-plugin="counterup">@ViewData["TotalFarmers"]</span></h3>
+                    <p class="text-muted mb-1">Toplam Çiftçiler</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <div class="avatar-sm bg-warning rounded-circle mb-3 mx-auto">
+                        <i class="fas fa-comment avatar-title font-22 text-white"></i>
+                    </div>
+                    <h3 class="text-dark mb-1"><span data-plugin="counterup">@ViewData["TotalRating"]</span></h3>
+                    <p class="text-muted mb-1">Toplam Yorum</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-xl-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="header-title">Kullanıcı Dağılımı</h4>
+                    <div id="donut-chart" class="apex-charts" dir="ltr"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">En Çok Satılan Ürün Adı</h5>
+                    <p class="card-text">@ViewData["MostSoldProductName"]</p>
+                    <h5 class="card-title">En Çok Satılan Ürün Toplam Satış</h5>
+                    <p class="card-text">@ViewData["MostSoldProductTotalSales"]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl
+-3 mb-3">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">En Yüksek Fiyatlı Ürün</h5>
+                    <p class="card-text">@ViewData["HighestPriceProductName"]</p>
+                    <h5 class="card-title">Fiyatı &#8378</h5>
+                    <p class="card-text">@ViewData["HighestPriceProductPrice"] &#8378</p>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end row -->
+</div> <!-- end container -->
+@section Scripts {
+    <script>
+        var totalUsers = @Html.Raw(Json.Serialize(ViewData["TotalUsers"]));
+        var totalConfirmedUsers = @Html.Raw(Json.Serialize(ViewData["TotalConfirmedUsers"]));
+        var unconfirmedUsers = totalUsers - totalConfirmedUsers;
+
+        var options = {
+            series: [totalConfirmedUsers, unconfirmedUsers],
+            chart: {
+                type: 'donut',
+                height: 280,
+            },
+            labels: ['Onaylı Hesaplar', 'Onay Bekleyenler'],
+            colors: ['#00acc1', '#f1556c'],
+            legend: {
+                show: true,
+                position: 'bottom',
+                horizontalAlign: 'center',
+                verticalAlign: 'middle',
+                containerMargin: {
+                    left: 10,
+                    right: 10
+                }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#donut-chart"), options);
+        chart.render();
+    </script>
+    <script>
+        var totalUsersUsers = @Html.Raw(Json.Serialize(ViewData["totalUsersUsers"]));
+        var totalFarmers = @Html.Raw(Json.Serialize(ViewData["totalFarmers"]));
+        var totalAdmin = @Html.Raw(Json.Serialize(ViewData["totalAdmin"]));
+
+        // Tüm rollerin toplam sayısı
+        var sum = totalUsersUsers + totalFarmers + totalAdmin;
+
+        // Admin yüzdesi
+        var adminPercentage = (totalAdmin / sum) * 100;
+        // Çiftçi yüzdesi
+        var farmerPercentage = (totalFarmers / sum) * 100;
+        // Kullanıcı yüzdesi
+        var userPercentage = (totalUsersUsers / sum) * 100;
+
+        var options = {
+            series: [totalAdmin, totalFarmers, totalUsersUsers],
+            chart: {
+                type: 'donut',
+                height: 280,
+            },
+            labels: ['Admin', 'Farmer', 'User'],
+            colors: ['#4caf50', '#fbc02d', '#2196f3'],
+            legend: {
+                show: true,
+                position: 'bottom',
+                horizontalAlign: 'center',
+                verticalAlign: 'middle',
+                containerMargin: {
+                    left: 10,
+                    right: 10
+                }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#user-role-distribution"), options);
+        chart.render();
+    </script>
+}

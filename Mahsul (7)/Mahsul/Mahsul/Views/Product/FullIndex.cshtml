@@ -1,0 +1,176 @@
+﻿@model ProductCategoryViewModel
+
+<h1 class="mb-4 text-center">Ürün Listesi</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <!-- Değişiklik burada -->
+            <div class="sidebar bg-light p-3 rounded" id="ctgr">
+                <form method="get" asp-controller="Product" asp-action="FullIndex">
+                    <h3>Kategoriler</h3>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="selectedCategories" value="@category.Name"
+                            @(Model.SelectedCategories != null && Model.SelectedCategories.Contains(category.Name) ? "checked" : "") />
+                            <label class="form-check-label">@category.Name</label>
+                        </div>
+
+                    }
+                    <button type="submit" class="btn btn-primary mt-3 w-100">Filtrele</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="content">
+                <table id="tbl1" class="table table-hover table-responsive">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th>Kategori</th>
+                            <th>Ürün Resmi</th>
+                            <th>Fiyat</th>
+                            <th>Açıklama</th>
+                            <th>Stok</th>
+                            <th>Çiftçi</th>
+                            <th>Konum</th>
+                            <th>Satın Al</th>
+                            <th>Detaylar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            if (product.Stok != 0)
+                            {
+                                <tr>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.SelectedCategoryName</td>
+                                    <td>
+                                        @if (product.ProductImage != null && product.ProductImage.Any())
+                                        {
+                                            <div id="carouselExampleControls_@product.ProductID" class="carousel slide" data-bs-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    @foreach (var image in product.ProductImage)
+                                                    {
+                                                        <div class="carousel-item @(image == product.ProductImage.First() ? "active" : "")">
+                                                            <img style="border-radius:20px;" class="d-block w-100" src="~/images/@image.ImagePath" alt="Product Image">
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@product.ProductID" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@product.ProductID" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>@product.Price &#8378</td>
+                                    <td>@product.Description</td>
+                                    <td>@product.Stok</td>
+                                    <td>@product.FarmerID</td>
+                                    <td>
+                                        @product.Address
+                                        @if (!string.IsNullOrEmpty(product.Address))
+                                        {
+                                            <br />
+                                            <a href="https://www.google.com/maps/search/?api=1&query=@Uri.EscapeDataString(product.Address)" target="_blank" class="btn btn-info btn-sm mt-2">Haritada Gör</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            @if (product.FarmerID != Model.UserFarmerId)
+                                            {
+                                                <form asp-controller="Purchase" asp-action="PurchaseProduct" method="get">
+                                                    <input type="hidden" name="ProductID" value="@product.ProductID" />
+                                                    <button type="submit" class="btn btn-success">Satın al</button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-info text-dark">Sizin Ürününüz</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Giriş yapmadan satın alma işlemi gerçekleştiremezsiniz.</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        <form asp-action="Details" asp-route-id="@product.ProductID" method="get">
+                                            <button type="submit" class="btn btn-info">Detaylar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#tbl1').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/Turkish.json"
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    .container-fluid {
+        max-width: 3000px;
+    }
+    .content{
+        left:0px;
+    }
+
+    .sidebar {
+        background-color: #f8f9fa; /* Arka plan rengi */
+        border-radius: 5px;
+        border: 1px solid #dee2e6; /* Kenarlık */
+        padding: 15px;
+        text-align: center; /* İçeriği merkeze hizala */
+    }
+
+
+
+    .carousel-inner img {
+        max-height: 80px;
+        object-fit: cover;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        filter: invert(100%);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+    #ctgr {
+        max-width: 300px;
+    }
+</style>
+
+
+

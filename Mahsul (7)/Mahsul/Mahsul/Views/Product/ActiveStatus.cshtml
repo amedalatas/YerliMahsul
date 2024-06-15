@@ -1,0 +1,16 @@
+﻿@foreach (var product in Model)
+{
+    <div class="product-item">
+        <h4>@product.ProductName</h4>
+        <p>@product.Description</p>
+        <p>Price: @product.Price</p>
+        <p>Stock: @product.Stok</p>
+        <p>Start Date: @product.StartDate</p>
+        <p>End Date: @product.EndDate</p>
+        <p>Is Active: @product.IsActive</p>
+        <form asp-controller="Product" asp-action="ActiveStatus" method="post">
+            <input type="hidden" name="productId" value="@product.ProductID" />
+            <button type="submit">Toggle Status</button>
+        </form>
+    </div>
+}

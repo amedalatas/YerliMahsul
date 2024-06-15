@@ -1,0 +1,196 @@
+﻿@model Mahsul.Models.ProductViewModel
+
+<h1>Ürün Düzenle</h1>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<form asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ProductID" />
+    <div class="form-group">
+        <label asp-for="ProductName"></label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Stok"></label>
+        <input asp-for="Stok" class="form-control" />
+        <span asp-validation-for="Stok" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="photos">Fotoğrafları Yükle</label>
+        <input type="file" multiple asp-for="photos" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Address">Adres</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SelectedCategoryId">Kategori Seç</label>
+        <select asp-for="SelectedCategoryId" class="form-control">
+            <option value="">-- Seçiniz --</option>
+            @foreach (var category in Model.categories)
+            {
+                <option value="@category.CategoryId">@category.Name</option>
+            }
+        </select>
+        <span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StartDate">Başlangıç Tarihi</label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndDate">Bitiş Tarihi</label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Kaydet" class="btn btn-primary" />
+    </div>
+</form>
+
+<h2>Mevcut Fotoğraflar</h2>
+@if (Model.ImagePaths != null && Model.ImagePaths.Any())
+{
+    <div class="image-gallery">
+        <div class="gallery-thumbnails">
+            @foreach (var image in Model.ImagePaths)
+            {
+                <div class="thumbnail-container">
+                    <img class="thumbnail" src="~/images/@image" alt="Thumbnail" />
+                    <button type="button" class="btn btn-danger btn-sm delete-image" data-image-path="@image">Sil</button>
+                </div>
+            }
+        </div>
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                @for (var i = 0; i < Model.ImagePaths.Count; i++)
+                {
+                    <div  class="carousel-item @(i == 0 ? "active" : "")">
+                        <img style="width:300px; height:200px;" class="d-block w-100" src="~/images/@Model.ImagePaths[i]" alt="Product Image" />
+                    </div>
+                }
+            </div>
+           
+        </div>
+    </div>
+}
+else
+{
+    <p>Yüklenmiş fotoğraf yok.</p>
+}
+
+
+    <style>
+        .image-gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gallery-thumbnails {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 10px;
+        }
+
+        .thumbnail-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .delete-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            padding: 0;
+            font-size: 12px;
+        }
+
+        .carousel-inner {
+            width: 100%;
+        }
+
+        .carousel-item img {
+            max-height: 500px;
+            object-fit: cover;
+        }
+    </style>
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Thumbnail click event to change carousel image
+            $('.thumbnail').click(function () {
+                var index = $(this).parent().index();
+                $('#carouselExampleControls').carousel(index);
+            });
+
+            // Delete image button click event
+            $('.delete-image').click(function () {
+                var imagePath = $(this).data('image-path');
+                var productId = @Model.ProductID;
+
+                if (confirm('Silmek istediğinize emin misiniz?')) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteImage", "Image")',
+                        type: 'POST',
+                        data: { productId: productId, imagePath: imagePath },
+                        success: function (response) {
+                            location.reload(); // Reload the page to reflect the changes
+                        },
+                        error: function (response) {
+                            alert('Resim silinirken bir hata oluştu.');
+                        }
+                    });
+                }
+            });
+
+            function slideCarousel(direction) {
+                $('#carouselExampleControls').carousel(direction);
+            }
+        });
+    </script>
+}

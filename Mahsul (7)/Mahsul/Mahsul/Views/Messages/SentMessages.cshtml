@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Mahsul.Models.Messages>
+
+<h1>Gönderdiğiniz Mesajlar</h1>
+
+<table id="tbl1" class="table">
+    <thead>
+        <tr>
+            <th>Alıcı</th>
+            <th>Mesaj</th>
+            <th>Tarih</th>
+            <th>Ürün Adı</th>
+            <th>Ürün Kategori</th>
+            <th>Durum</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model)
+        {
+            <tr class="@(message.IsRead ? "" : "table-warning")">
+                <td>@message.ReceiverUsername</td>
+                <td>@message.Content</td>
+                <td>@message.Timestamp</td>
+                <td>@message.ProductName</td>
+                <td>@message.ProductCategory</td>
+                <td>
+                    @if (message.IsRead)
+                    {
+                        <span class="text-success"><i class="fas fa-check-circle"></i> Okundu</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger"><i class="fas fa-times-circle"></i> Okunmadı</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@message.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"> Düzenle</i></a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#tbl1').DataTable();
+        });
+    </script>
+}

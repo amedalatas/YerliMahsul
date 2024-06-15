@@ -1,0 +1,24 @@
+﻿@model Mahsul.Models.MessageCreateViewModel
+
+<h1>Mesaja Cevap Ver</h1>
+
+<form method="post">
+    <input type="hidden" name="ReceiverId" value="@Model.ReceiverId" />
+    <input type="hidden" name="ReceiverUsername" value="@Model.ReceiverUsername" />
+    <input type="hidden" name="ProductName" value="@Model.ProductName" />
+    <input type="hidden" name="ProductCategory" value="@Model.ProductCategory" />
+
+    <div class="form-group">
+        <label for="ProductName">Ürün Adı</label>
+        <input type="text" class="form-control" id="ProductName" name="ProductName" value="@Model.ProductName" readonly>
+    </div>
+    <div class="form-group">
+        <label for="ProductCategory">Ürün Kategori</label>
+        <input type="text" class="form-control" id="ProductCategory" name="ProductCategory" value="@Model.ProductCategory" readonly>
+    </div>
+    <div class="form-group">
+        <label for="Content">Mesaj İçeriği</label>
+        <textarea class="form-control" id="Content" name="Content" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Gönder</button>
+</form>

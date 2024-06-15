@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Ödeme Başarılı";
+}
+
+<<div class="card payment-success">
+    <h2>Ödemeniz Başarıyla Gerçekleştirildi</h2>
+    <p>Satın aldığınız ürün miktarı: @ViewBag.Quantity</p>
+    <p>Toplam tutar: @ViewBag.TotalPrice ₺</p>
+    <button class="button" onclick="location.href='@Url.Action("FullIndex", "Product")'">Anasayfaya Git</button>
+</div>
+<style>
+    .payment-success {
+        text-align: center;
+        margin-top: 2em;
+    }
+
+        .payment-success h2 {
+            margin-bottom: 1em;
+            color: #28a745;
+            font-size: 2em; /* Başlık için büyük bir font boyutu */
+        }
+
+        .payment-success p {
+            margin-bottom: 0.5em;
+            font-size: 1.2em; /* Paragraflar için daha büyük bir font boyutu */
+        }
+
+    .card {
+        background-color: #f8f9fa; /* Kart arka plan rengi */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .card p {
+            margin: 10px 0; /* Paragraflar arasındaki boşluk */
+        }
+
+
+    .button {
+        background-color: #007bff; /* Düğme arka plan rengi */
+        color: white; /* Düğme metin rengi */
+        padding: 10px 20px; /* Düğme dolgusu */
+        border: none; /* Düğme kenarlığı olmadan */
+        border-radius: 5px; /* Düğme köşe yarıçapı */
+        cursor: pointer; /* İmleç el işareti */
+        font-size: 1em; /* Düğme metin boyutu */
+        transition: background-color 0.3s ease; /* Geçiş efekti */
+    }
+
+        .button:hover {
+            background-color: brown; /* Fare üzerine gelindiğinde düğme rengi */
+        }
+
+</style>

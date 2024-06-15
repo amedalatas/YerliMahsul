@@ -1,0 +1,74 @@
+﻿@model Mahsul.Models.ProductViewModel
+
+<h1>Ürün Ekle</h1>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<form asp-controller="Product" asp-action="AddProduct" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="ProductName"></label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Stok"></label>
+        <input asp-for="Stok" class="form-control" />
+        <span asp-validation-for="Stok" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="photos">Fotoğrafları Yükle</label>
+        <input type="file" multiple asp-for="photos" class="form-control" />
+        <span asp-validation-for="photos" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address">Adres</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SelectedCategoryId">Kategori Seç</label>
+        <select asp-for="SelectedCategoryId" class="form-control">
+            <option value="">-- Seçiniz --</option>
+            @foreach (var category in Model.categories)
+            {
+                <option value="@category.CategoryId">@category.Name</option>
+            }
+        </select>
+        <span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StartDate">Başlangıç Tarihi</label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndDate">Bitiş Tarihi</label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Ekle</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

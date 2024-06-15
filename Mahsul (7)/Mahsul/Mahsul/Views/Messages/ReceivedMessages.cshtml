@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Mahsul.Models.Messages>
+
+<h1>Aldığınız Mesajlar</h1>
+
+@if (ViewData["UnreadMessageCount"] != null && (int)ViewData["UnreadMessageCount"] > 0)
+{
+    <div class="alert alert-info">
+        Okunmamış mesajlarınız: <strong>@ViewData["UnreadMessageCount"]</strong>
+    </div>
+}
+
+<table id="tbl1" class="table">
+    <thead>
+        <tr>
+            <th>Gönderen</th>
+            <th>Mesaj</th>
+            <th>Tarih</th>
+            <th>Ürün Adı</th>
+            <th>Ürün Kategori</th>
+            <th>Durum</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model)
+        {
+            <tr class="@(message.IsRead ? "" : "table-warning")">
+                <td>@message.SenderUserName</td>
+                <td>@message.Content</td>
+                <td>@message.Timestamp</td>
+                <td>@message.ProductName</td>
+                <td>@message.ProductCategory</td>
+                <td>
+                    @if (!message.IsRead && message.ReceiverUsername == User.Identity.Name)
+                    {
+                        <form asp-action="MarkAsRead" method="post">
+                            <input type="hidden" name="messageId" value="@message.Id" />
+                            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-envelope-open-text"></i> Okundu İşaretle</button>
+                        </form>
+                    }
+                    else if (message.IsRead)
+                    {
+                        <span class="text-success"><i class="fas fa-check-circle"></i> Okundu</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger"><i class="fas fa-times-circle"></i> Okunmadı</span>
+                    }
+                </td>
+                <td>
+                    <form asp-controller="Messages" asp-action="ReplyMessage" method="get">
+                        <input type="hidden" name="senderId" value="@message.SenderId" />
+                        <input type="hidden" name="senderUserName" value="@message.SenderUserName" />
+                        <input type="hidden" name="productName" value="@message.ProductName" />
+                        <input type="hidden" name="productCategory" value="@message.ProductCategory" />
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-reply"></i> Cevap Ver</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#tbl1').DataTable();
+        });
+    </script>
+}

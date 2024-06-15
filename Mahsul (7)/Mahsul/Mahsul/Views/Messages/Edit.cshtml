@@ -1,0 +1,38 @@
+﻿@model Mahsul.Models.Messages
+
+@{
+    ViewData["Title"] = "Mesaj Düzenle";
+}
+
+<h1>Mesaj Düzenle</h1>
+
+<h4>Messages</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SenderId" />
+            <input type="hidden" asp-for="SenderUserName" />
+            <input type="hidden" asp-for="ReceiverId" />
+            <input type="hidden" asp-for="ReceiverUsername" />
+            <input type="hidden" asp-for="ProductName" />
+            <input type="hidden" asp-for="ProductCategory" />
+            <input type="hidden" asp-for="Timestamp" />
+            <input type="hidden" asp-for="IsRead" />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+                <a asp-action="Index" class="btn btn-secondary">İptal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Hakkımızda";
+}
+
+<div class="contact-container">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h1>Biz Kimiz?</h1>
+            <p class="lead">Mahsul, çiftçiler ile tüketiciler arasında doğrudan bir bağlantı kurarak taze ve kaliteli ürünlerin satın alınmasını kolaylaştıran bir platformdur. Misyonumuz, çiftçilerin ürünlerini pazarlamasını ve tüketicilerin doğal ve organik ürünlere erişimini artırmaktır.</p>
+            <p>Platformumuz, çiftçilerin ürünlerini sergileyebilecekleri ve tüketicilerin yerel ürünlere kolayca erişebilecekleri bir pazar yeri olarak hizmet vermektedir. Doğrudan satın alma, güvenli ödeme ve hızlı teslimat gibi özelliklerle kullanıcı deneyimini en üst düzeye çıkarmak için çalışıyoruz.</p>
+        </div>
+        <div class="col-md-6 text-center">
+            <img id="aboutUsImage" src="~/images/ciftci.jpg" alt="Biz Kimiz?" class="img-fluid" style="max-width: 400px; height: auto;" />
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Neden Bizi Tercih Etmelisiniz?</h2>
+            <ul class="list-group">
+                <li class="list-group-item">Kaliteli ve taze ürünler</li>
+                <li class="list-group-item">Doğrudan çiftçilerden satın alma imkanı</li>
+                <li class="list-group-item">Geniş ürün yelpazesi</li>
+                <li class="list-group-item">Güvenli ve hızlı ödeme seçenekleri</li>
+                <li class="list-group-item">Yerel çiftçilere destek</li>
+                <li class="list-group-item">Müşteri memnuniyeti odaklı hizmet</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        var aboutUsImage = document.getElementById('aboutUsImage');
+        aboutUsImage.style.transition = 'transform 0.5s ease-in-out';
+
+        aboutUsImage.addEventListener('mouseenter', function () {
+            aboutUsImage.style.transform = 'scale(1.1)';
+        });
+
+        aboutUsImage.addEventListener('mouseleave', function () {
+            aboutUsImage.style.transform = 'scale(1)';
+        });
+    };
+</script>
+
+<style>
+    .contact-container {
+        background-color: #0a2240;
+        color: #fff;
+        padding: 40px;
+        max-width: 800px;
+        margin: 50px auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .contact-container h1, .contact-container h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .contact-container p, .contact-container .lead {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .contact-container .img-fluid {
+            max-width: 400px;
+            height: auto;
+        }
+
+    .list-group-item {
+        background-color: #fff;
+        color: #000;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+        .list-group-item:hover {
+            background-color: #cce5ff; /* Renk */
+            border-color: #b8daff; /* Kenarlık Rengi */
+            color: #004085; /* Metin Rengi */
+        }
+</style>

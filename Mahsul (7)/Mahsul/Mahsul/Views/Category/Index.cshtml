@@ -1,0 +1,30 @@
+﻿@model List<Mahsul.Models.Category>
+
+<h1>Kategoriler</h1>
+
+<p>
+    <a asp-controller="Category" asp-action="Create" class="btn btn-success">Yeni Kategori Oluştur</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Kategori Adı</th>
+            <th>Açıklama</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>@category.Description</td>
+                <td>
+                    <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.CategoryId">Düzenle</a> |
+                    <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.CategoryId">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

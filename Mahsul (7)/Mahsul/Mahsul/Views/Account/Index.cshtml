@@ -1,0 +1,22 @@
+﻿@{
+    // Eğer kullanıcı rolleri veya adresi yoksa, soruları gösterme
+    if (User == null || !User.IsInRole("Farmer"))
+    {
+        // Soruları göster
+        <form asp-controller="Account" asp-action="CheckUserRole" method="post">
+            <label for="answer">Çiftçi misiniz?</label>
+            <select id="answer" name="answer">
+                <option value="evet">Evet</option>
+                <option value="hayır">Hayır</option>
+            </select>
+            <label for="address">Adresiniz:</label>
+            <input type="text" id="address" name="address">
+            <button type="submit">Gönder</button>
+        </form>
+    }
+    else
+    {
+    // Kullanıcı rolleri veya adresi varsa, başka bir içerik gösterilebilir
+        <p>Kullanıcı rolleri veya adresi olduğu için soruları göstermiyoruz.</p>
+    }
+}

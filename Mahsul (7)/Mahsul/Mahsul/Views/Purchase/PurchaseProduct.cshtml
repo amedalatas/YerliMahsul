@@ -1,0 +1,193 @@
+﻿@model Mahsul.Models.PurchaseViewModel
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<div class="container mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Ana Sayfa</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.ProductName</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-lg-6">
+            @if (Model.ProductImages != null && Model.ProductImages.Any())
+            {
+                <div id="productCarousel" class="carousel slide mb-4" data-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var image in Model.ProductImages)
+                        {
+                            <div class="carousel-item @(image == Model.ProductImages.First() ? "active" : "")">
+                                <img class="d-block w-100" src="~/images/@image.ImagePath" alt="Product Image">
+                            </div>
+                        }
+                    </div>
+                    <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                <div class="row">
+                    @foreach (var image in Model.ProductImages)
+                    {
+                        <div class="col-3">
+                            <img class="img-thumbnail" src="~/images/@image.ImagePath" alt="Product Image Thumbnail">
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <div class="col-lg-6">
+            <div class="product-info">
+                <h1 class="h4">@Model.ProductName</h1>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="h5 text-primary">@Model.Price ₺</span>
+                </div>
+                <form id="purchaseForm" asp-action="ConfirmPurchase" method="post">
+                    <input type="hidden" name="ProductID" value="@Model.ProductID" />
+                    <input type="hidden" id="quantity" name="Quantity" value="" />
+                    <div class="form-group">
+                        <label for="quantity">Adet</label>
+                        <input type="number" id="quantityInput" min="1" max="@Model.Stok" class="form-control w-50" required>
+                    </div>
+                    <button type="button" id="confirmPurchaseBtn" class="btn btn-warning btn-block">Satın Al</button>
+                </form>
+                <hr>
+                <div class="product-meta">
+                    <p><strong>Ürün Kodu:</strong> @Model.ProductID</p>
+                    <p><strong>Stok Durumu:</strong> @Model.Stok Adet</p>
+                    <p><strong>Kategori:</strong> @Model.SelectedCategoryName</p>
+                    <p><strong>Çiftçi:</strong> @Model.FarmerUsername</p>
+                    <p><strong>Konum:</strong> @Model.Address</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="product-description">
+                <h2 class="h5 text-secondary">Ürün Açıklaması</h2>
+                <p>@Model.Description</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="purchaseConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="purchaseConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="purchaseConfirmationModalLabel">Satın Alma Onayı</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Satın almak istediğiniz ürün: <strong><span id="productName"></span></strong></p>
+                <p>Adet: <span id="productQuantity"></span></p>
+                <p>Toplam Fiyat: <span id="totalPrice"></span>₺</p>
+                <p>Satın almayı onaylıyor musunuz?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" id="confirmModalBtn">Onayla</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#confirmPurchaseBtn').click(function () {
+            var quantity = $('#quantityInput').val();
+            var totalPrice = quantity * @Model.Price;
+            $('#productQuantity').text(quantity);
+            $('#totalPrice').text(totalPrice);
+
+            $('#purchaseConfirmationModal').modal('show');
+        });
+
+        // Attach the event handler only once
+        $('#confirmModalBtn').click(function () {
+            var quantity = $('#quantityInput').val();
+            $('#quantity').val(quantity); // Set quantity value
+            $('#purchaseForm').submit(); // Submit form
+        });
+    });
+</script>
+
+
+
+
+<style>
+    .container {
+        max-width: 960px;
+        margin: auto;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding-left: 0;
+    }
+
+    .carousel-item img {
+        width: 100%;
+        height: 300px;
+        border-radius: 8px;
+    }
+
+    .img-thumbnail {
+        max-height: 80px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid #dee2e6;
+    }
+
+    .product-info {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+    }
+
+    .h5.text-primary {
+        font-size: 1.5rem;
+    }
+
+    .form-control {
+        display: inline-block;
+        width: auto;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+    .product-meta p {
+        margin: 0;
+    }
+
+    .product-description {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        margin-top: 20px;
+    }
+
+        .product-description p {
+            margin: 0;
+            line-height: 1.6;
+        }
+</style>

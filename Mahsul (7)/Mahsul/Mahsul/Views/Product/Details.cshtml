@@ -1,0 +1,181 @@
+﻿@model ProductDetailsViewModel
+@using System.Security.Claims
+@using System.Text
+@using Microsoft.AspNetCore.Html
+
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h1 class="card-title">@Model.Product.ProductName</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @if (Model.Product.ProductImage != null && Model.Product.ProductImage.Any())
+                    {
+                        <div id="carouselExampleControls_@Model.Product.ProductID" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var image in Model.Product.ProductImage)
+                                {
+                                    <div class="carousel-item @(image == Model.Product.ProductImage.First() ? "active" : "")">
+                                        <img class="d-block w-100 rounded" src="~/images/@image.ImagePath" alt="Product Image" style="max-height: 400px;">
+                                    </div>
+                                }
+                            </div>
+                            <a class="carousel-control-prev" href="#" role="button" onclick="slideCarousel('@Model.Product.ProductID', 'prev')" style="left: 0px; top:41%; background-color: black; width: 3%; height: 5%; display: flex; align-items: center; justify-content: center;">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: black;"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#" role="button" onclick="slideCarousel('@Model.Product.ProductID', 'next')" style="right: 0px; top:41%; background-color: black; width: 3%; height: 5%; display: flex; align-items: center; justify-content: center;">
+                                <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: black;"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        <div class="d-flex mt-2">
+                            @foreach (var image in Model.Product.ProductImage)
+                            {
+                                <img class="img-thumbnail mx-1" src="~/images/@image.ImagePath" alt="Thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Fiyat:</strong> @Model.Product.Price &#8378</li>
+                        <li class="list-group-item"><strong>Açıklama:</strong> @Model.Product.Description</li>
+                        <li class="list-group-item"><strong>Stok:</strong> @Model.Product.Stok</li>
+                        <li class="list-group-item"><strong>Çiftçi:</strong> @Model.FarmerUserName</li>
+                        <li class="list-group-item"><strong>Konum:</strong> @Model.Product.Address</li>
+                        <li class="list-group-item"><strong>Kategori:</strong> @Model.Product.SelectedCategoryName</li>
+                        <li class="list-group-item"><strong>Başlangıç Tarihi:</strong> @Model.Product.StartDate.ToShortDateString()</li>
+                        <li class="list-group-item"><strong>Bitiş Tarihi:</strong> @Model.Product.EndDate.ToShortDateString()</li>
+                    </ul>
+                    @if (!Model.IsOwnProduct)
+                    {
+                        <a asp-controller="Messages" asp-action="Create"
+                           asp-route-receiverId="@Model.Product.FarmerID"
+                           asp-route-receiverUsername="@Model.FarmerUserName"
+                           asp-route-productName="@Model.Product.ProductName"
+                           asp-route-productCategory="@Model.Product.SelectedCategoryName"
+                           class="btn btn-primary mt-3">Satıcıya Sor</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-lg mt-5">
+        <div class="card-header bg-primary text-white">
+            <h2>Yorumlar</h2>
+        </div>
+        <div class="card-body">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            @if (Model.Product.Ratings != null && Model.Product.Ratings.Any())
+            {
+                foreach (var rating in Model.Product.Ratings)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p><strong>@(rating.Username)</strong> - @RenderStars(rating.RatingValue)</p>
+                            <p>@rating.Comment</p>
+                            <p><small>@rating.CreatedAt.ToShortDateString()</small></p>
+
+                            @if (rating.UserID == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                            {
+                                <a href="@Url.Action("Edit", "Rating", new { id = rating.RatingID })" class="btn btn-warning">Düzenle</a>
+                                <form asp-action="Delete" asp-controller="Rating" method="post" class="d-inline" onsubmit="return confirmDelete()">
+                                    <input type="hidden" name="id" value="@rating.RatingID" />
+                                    <button type="submit" class="btn btn-danger">Sil</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Henüz yorum yapılmamış.</p>
+            }
+
+            @if (User.Identity.IsAuthenticated && !Model.IsOwnProduct)
+            {
+                <a href="@Url.Action("AddRating", "Product", new { productId = Model.Product.ProductID })" class="btn btn-primary mt-3">Yorum Yap</a>
+            }
+            else if (User.Identity.IsAuthenticated && Model.IsOwnProduct)
+            {
+                <p>Kendi ürününüze yorum yapamazsınız.</p>
+            }
+            else
+            {
+                <p>Yorum yapabilmek için <a href="/Identity/Account/Login">giriş yapmalısınız</a>.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function confirmDelete() {
+        return confirm('Silmek istediğinizden emin misiniz?');
+    }
+    function slideCarousel(productId, direction) {
+        $('#carouselExampleControls_' + productId).carousel(direction);
+    }
+</script>
+
+@functions {
+    public static IHtmlContent RenderStars(int ratingValue)
+    {
+        var fullStar = "<span class='fa fa-star checked'></span>";
+        var emptyStar = "<span class='fa fa-star'></span>";
+        var starsHtml = new StringBuilder();
+        for (int i = 1; i <= 5; i++)
+        {
+            if (i <= ratingValue)
+            {
+                starsHtml.Append(fullStar);
+            }
+            else
+            {
+                starsHtml.Append(emptyStar);
+            }
+        }
+        return new HtmlString(starsHtml.ToString());
+    }
+}
+
+<style>
+    .checked {
+        color: orange;
+    }
+
+    .fa-star {
+        font-size: 20px;
+        margin-right: 2px;
+    }
+
+    .carousel-inner img {
+        border-radius: 20px;
+    }
+
+    .card {
+        border-radius: 20px;
+    }
+
+    .card-header {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+</style>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#tbl4').DataTable();
+        });
+    </script>
+}

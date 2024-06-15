@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Mahsul.Models.Purchase>
+
+@{
+    ViewData["Title"] = "Satışlar";
+}
+
+<h1>Yapılan Satışlar</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="purchaseTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Satın Alan Kişi</th>
+                    <th>Ürün</th>
+                    <th>Miktar</th>
+                    <th>Fiyat</th>
+                    <th>Satın Alma Tarihi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var purchase in Model)
+                {
+                    <tr>
+                        <td>@purchase.User.UserName</td>
+                        <td>@purchase.Product.ProductName</td>
+                        <td>@purchase.Quantity</td>
+                        <td>@purchase.Price</td>
+                        <td>@purchase.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#purchaseTable').DataTable();
+        });
+    </script>
+}

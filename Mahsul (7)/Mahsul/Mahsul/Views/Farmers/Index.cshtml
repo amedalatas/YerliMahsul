@@ -1,0 +1,42 @@
+﻿<h1>Çiftçiler</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Çiftçi ID</th>
+                <th scope="col">Kullanıcı Adı</th>
+                <th scope="col">Adres</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var farmer in Model)
+            {
+                <tr>
+                    <td>@farmer.FarmerID</td>
+                    <td>@farmer.Username</td>
+                    <td>@farmer.Address</td>
+                    <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <form asp-action="Delete" asp-route-id="@farmer.FarmerID" method="post" onsubmit="return confirm('Bu çiftçiyi silmek istediğinizden emin misiniz?');">
+                                <button type="submit" class="btn btn-danger btn-sm mr-1">Çiftçiyi Sil</button>
+                            </form>
+                            <form asp-action="RemoveProducts" asp-route-id="@farmer.FarmerID" method="post" onsubmit="return confirm('Bu çiftçinin ürünlerini silmek istediğinizden emin misiniz?');">
+                                <button type="submit" class="btn btn-warning btn-sm">Ürünleri Kaldır</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

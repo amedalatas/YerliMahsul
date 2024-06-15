@@ -1,0 +1,200 @@
+﻿<div class="payment-container">
+
+    <div class="payment-form-container">
+        <form asp-action="ProcessPayment" method="post" class="payment-form">
+            <input type="hidden" name="ProductID" value="@Model.ProductID" />
+            <input type="hidden" name="Quantity" value="@Model.Quantity" />
+            <div class="form-group">
+                <label for="CardNumber">Kart No:</label>
+                <div class="card-number-input">
+                    <input type="text" id="CardNumber" name="CardNumber" required pattern="\d{16}" maxlength="16" title="16 haneli kart numarası girin">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="CardHolderName">Kart Üzerindeki İsim:</label>
+                <input type="text" id="CardHolderName" name="CardHolderName" required pattern="[a-zA-Z\s]+" title="Sadece harfler ve boşluklar">
+            </div>
+            <div class="form-group">
+                <label for="ExpiryMonth">Son Kullanma Tarihi:</label>
+                <div class="expiry-date">
+                    <select id="ExpiryMonth" name="ExpiryMonth" required>
+                        <option value="">Ay</option>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i.ToString("D2")">@i.ToString("D2")</option>
+                        }
+                    </select>
+                    <select id="ExpiryYear" name="ExpiryYear" required>
+                        <option value="">Yıl</option>
+                        @for (int i = @DateTime.Now.Year; i <= @DateTime.Now.Year + 20; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="CVC">CVC2:</label>
+                <input type="text" id="CVC" name="CVC" required pattern="\d{3}" maxlength="3" title="3 haneli CVC girin">
+                <a href="https://eticket.hasturizm.net/CvvNedir.aspx" class="cvc-info">CVC2 Nedir?</a>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="use3dSecure" name="use3dSecure">
+                <label for="use3dSecure">3D kullanmak istiyorum. <a href="https://www.paytr.com/blog/3d-secure-nedir?campaignid=20489058464&adgroupid=153134521575&keyword=&adposition=&creative=671114244696&device=c&matchtype=&placement=&targetid=dsa-2185946152723&gclid=Cj0KCQjw9vqyBhCKARIsAIIcLMG2Ow5QFGhTLBM49xsa1oP-ZIm_vLmTu2xfw2XIqnaQS1QAol7OLxgaAp7iEALw_wcB&loc_interest_ms=&loc_physical_ms=21359&gad_source=1">3D nedir?</a></label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="saveCardInfo" name="saveCardInfo">
+                <label for="saveCardInfo">Kredi kartı bilgilerimin MasterPass ile kaydedilmesini onaylıyorum. <a href="https://www.mastercard.com.tr/tr-tr/tuketiciler/odeme-secenekleri/masterpass.html">MasterPass nedir?</a></label>
+            </div>
+            <button type="submit" class="btn btn-primary">Ödemeyi Onayla ve Satın Al</button>
+        </form>
+        <div class="card-preview">
+            <img src="~/images/card-preview.png" alt="Credit Card Preview">
+        </div>
+    </div>
+    <div class="payment-success" style="display: none;">
+        <h2>Ödemeniz Başarıyla Gerçekleştirildi</h2>
+        <p>Toplamda @Model.Quantity adet ürün satın aldınız.</p>
+        <p>Toplam Ödeme Miktarı: @(Model.Price * Model.Quantity) ₺</p>
+    </div>
+
+</div>
+<script>
+    // Ödeme başarılı olduğunda bu işlevi çağırarak ödeme başarılı mesajını göster
+    function showPaymentSuccessMessage() {
+        document.querySelector('.payment-success').style.display = 'block';
+    }
+</script>
+
+<style>
+    .payment-container {
+        max-width: 800px;
+        margin: 2em auto;
+        padding: 2em;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
+
+    .payment-tabs {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5em;
+    }
+
+    .tab {
+        flex: 1;
+        padding: 0.75em;
+        text-align: center;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+    }
+
+        .tab.active {
+            border-bottom: 2px solid #007bff;
+            font-weight: bold;
+        }
+
+    .payment-form-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .payment-form {
+        flex: 1;
+        margin-right: 2em;
+    }
+
+    .card-preview {
+        flex: 0 0 300px;
+        text-align: center;
+    }
+
+        .card-preview img {
+            width: 100%;
+            height: auto;
+        }
+
+    .form-group {
+        margin-bottom: 1.5em;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5em;
+            color: #666666;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: calc(100% - 1em);
+            padding: 0.75em;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+    .card-number-input {
+        display: flex;
+        align-items: center;
+    }
+
+        .card-number-input input {
+            flex: 1;
+        }
+
+        .card-number-input .virtual-keyboard {
+            margin-left: 0.5em;
+            text-decoration: none;
+            font-size: 0.875em;
+            color: #007bff;
+        }
+
+    .expiry-date {
+        display: flex;
+        gap: 1em;
+    }
+
+        .expiry-date select {
+            flex: 1;
+        }
+
+    .cvc-info {
+        margin-left: 0.5em;
+        font-size: 0.875em;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.75em;
+        border: none;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+    .payment-success {
+        text-align: center;
+        margin-top: 2em;
+    }
+
+        .payment-success h2 {
+            margin-bottom: 1em;
+            color: #28a745;
+        }
+
+        .payment-success p {
+            margin-bottom: 0.5em;
+        }
+</style>
